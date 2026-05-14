@@ -43,13 +43,9 @@ df = df[
         "isFraud",
     ]
 ]
-
-# --- Missing value handling ---
 print("\n[1.1] Missing values per column:")
 print(df.isnull().sum())
 
-# Strategy: drop rows with nulls in target; fill numeric nulls with median.
-# Median is robust to the extreme skew typical in financial transaction data.
 df.dropna(subset=["isFraud"], inplace=True)
 
 numeric_cols = [
@@ -101,14 +97,12 @@ y = df["isFraud"].copy()
 scaler = StandardScaler()
 X_scaled = scaler.fit_transform(X_raw)
 
-# Fit PCA on all components first to inspect explained variance
 pca_full = PCA()
 pca_full.fit(X_scaled)
 
 explained = pca_full.explained_variance_ratio_
 cumulative = np.cumsum(explained)
 
-# --- Scree plot ---
 plt.figure(figsize=(10, 4))
 plt.subplot(1, 2, 1)
 plt.bar(range(1, len(explained) + 1), explained, color="steelblue")
